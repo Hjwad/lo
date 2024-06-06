@@ -75,7 +75,6 @@ async def play_commnd(
     url,
     fplay,
 ):
-    r = requests.get('https://www.youtube.com', proxies=proxyDict)
     if not await check_is_joined(message):
         return
     mystic = await message.reply_text(
