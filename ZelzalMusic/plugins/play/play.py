@@ -1,62 +1,68 @@
 import random
 import string
-from ast import ExceptHandler
-from pyrogram import filters, Client
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
-
+from config import (YAFA_NAME,
+                    YAFA_CHANNEL, CHANNEL_SUDO)
 import config
-from config import BOT_TOKEN
-from strings.filters import command
-from ZelzalMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
-from ZelzalMusic.core.call import Zelzaly
-from ZelzalMusic.utils import seconds_to_min, time_to_seconds
-from ZelzalMusic.utils.channelplay import get_channeplayCB
-from ZelzalMusic.utils.decorators.language import languageCB
-from ZelzalMusic.utils.decorators.play import PlayWrapper
-from ZelzalMusic.utils.formatters import formats
-from ZelzalMusic.utils.inline import (
+from AnonXMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
+from AnonXMusic.core.call import Anony
+from AnonXMusic.utils import seconds_to_min, time_to_seconds
+from AnonXMusic.utils.channelplay import get_channeplayCB
+from AnonXMusic.utils.decorators.language import languageCB
+from AnonXMusic.utils.decorators.play import PlayWrapper
+from AnonXMusic.utils.formatters import formats
+from AnonXMusic.utils.inline import (
     botplaylist_markup,
     livestream_markup,
     playlist_markup,
     slider_markup,
     track_markup,
 )
-from ZelzalMusic.utils.logger import play_logs
-from ZelzalMusic.utils.stream.stream import stream
+from AnonXMusic.utils.logger import play_logs
+from AnonXMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
-import os, requests
-
 
 force_btn = InlineKeyboardMarkup(
     [
         [
             InlineKeyboardButton(   
-              text=f"Not ᥉ꪮ᥉ .", url=f"t.me/mmmsc",)                        
+              text=f"{YAFA_NAME}", url=f"{YAFA_CHANNEL}",)                        
         ],        
     ]
 )
-async def check_is_joined(message):    
+async def check_is_joined(message):
     try:
-        userid = message.from_user.id
-        user_name = message.from_user.first_name
-        status = await app.get_chat_member("mmmsc", userid)
-        return True
-    except Exception:
-        await message.reply_text(f'┇عزيزي: {message.from_user.mention}\n┇أشتࢪك في قناة البوت أولاً.\n┇قناة البوت: @mmmsc 🍓. ',reply_markup=force_btn,disable_web_page_preview=False)
-        return False
+    	if str("ChatType.CHANNEL") in str(message.sender_chat.type):
+    		return True
+    except:
+        
+        try:
+           userid = message.from_user.id
+           status = await app.get_chat_member(f"{CHANNEL_SUDO}", userid)
+           return True
+        except Exception:
+            await app.send_message(message.chat.id,"**⚠️︙عذراً، عليك الانضمام الى قناة البوت أولاً :**",reply_markup=force_btn,disable_web_page_preview=False)
+            return False
 
-
-@app.on_message(command(["شغل","تشغيل"])
-    & filters.group
-    & ~BANNED_USERS
-)
-@app.on_message(filters.command(["play","vplay","cplay","cvplay",
+@app.on_message(
+    filters.command(
+        [
+            "play",
+            "تشغيل",
+            "شغل",
+            "vplay",
+            "فديو",
+            "cplay",
+            "cvplay",
             "playforce",
             "vplayforce",
             "cplayforce",
-            "cvplayforce",])
-    & filters.group
+            "cvplayforce",
+        ],""
+    )
     & ~BANNED_USERS
 )
 @PlayWrapper
@@ -80,8 +86,8 @@ async def play_commnd(
     slider = None
     plist_type = None
     spotify = None
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
+    user_id = message.from_user.id if message.from_user else "1121532100"
+    user_name = message.from_user.first_name if message.from_user else "None"
     audio_telegram = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
         if message.reply_to_message
@@ -308,7 +314,7 @@ async def play_commnd(
             return await mystic.delete()
         else:
             try:
-                await Zelzaly.stream_call(url)
+                await Anony.stream_call(url)
             except NoActiveGroupCall:
                 await mystic.edit_text(_["black_9"])
                 return await app.send_message(
@@ -521,7 +527,7 @@ async def play_music(client, CallbackQuery, _):
     return await mystic.delete()
 
 
-@app.on_callback_query(filters.regex("ZelzalymousAdmin") & ~BANNED_USERS)
+@app.on_callback_query(filters.regex("AnonymousAdmin") & ~BANNED_USERS)
 async def anonymous_check(client, CallbackQuery):
     try:
         await CallbackQuery.answer(
@@ -532,7 +538,7 @@ async def anonymous_check(client, CallbackQuery):
         pass
 
 
-@app.on_callback_query(filters.regex("ZelzalyPlaylists") & ~BANNED_USERS)
+@app.on_callback_query(filters.regex("AnonyPlaylists") & ~BANNED_USERS)
 @languageCB
 async def play_playlists_command(client, CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
