@@ -26,7 +26,9 @@ DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 2001))
 LOGGER_ID = int(getenv("LOGGER_ID", None))
 
 
-YAFA_NAME = os.getenv("YAFA_NAME")
+YAFA_NAME = os.getenv("Not sos")
+YAFA_CHANNEL = os.getenv("mmmsc")
+CHANNEL_SUDO = os.getenv("-1001299814737")
 # Get this value from @FallenxBot on Telegram by /id
 OWNER_ID = int(getenv("OWNER_ID", 1895219306))
 
