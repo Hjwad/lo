@@ -29,23 +29,20 @@ force_btn = InlineKeyboardMarkup(
     [
         [
             InlineKeyboardButton(   
-              text=f"{YAFA_NAME}", url=f"{YAFA_CHANNEL}",)                        
+              text=f"اضغط للأشتراك .", url=f"t.me/mmmsc",)                        
         ],        
     ]
 )
-async def check_is_joined(message):
+async def check_is_joined(message):    
     try:
-    	if str("ChatType.CHANNEL") in str(message.sender_chat.type):
-    		return True
-    except:
-        
-        try:
-           userid = message.from_user.id
-           status = await app.get_chat_member(f"{CHANNEL_SUDO}", userid)
-           return True
-        except Exception:
-            await app.send_message(message.chat.id,"**⚠️︙عذراً، عليك الانضمام الى قناة البوت أولاً :**",reply_markup=force_btn,disable_web_page_preview=False)
-            return False
+        userid = message.from_user.id
+        user_name = message.from_user.first_name
+        status = await app.get_chat_member("mmmsc", userid)
+        return True
+    except Exception:
+        await message.reply_text(f'┇عزيزي: {message.from_user.mention}\n┇أشتࢪك في قناة البوت أولاً.\n┇قناة البوت: @mmmsc . 🍓 ',reply_markup=force_btn,disable_web_page_preview=False)
+        return False
+
 
 @app.on_message(
     filters.command(
